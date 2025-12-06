@@ -55,6 +55,23 @@ def count_candidates_in_ranges(candidates, optimized_ranges):
     return count
 
 
+def count_candidates_in_ranges_v2(candidates, optimized_ranges):
+    sorted_candidates = sorted(candidates)
+    candidates_in_range = 0
+    range_index = 0
+    current_range = optimized_ranges[range_index]
+    
+    for candidate in sorted_candidates:
+        while candidate > current_range[1] and range_index < len(optimized_ranges) - 1:
+            range_index += 1
+            current_range = optimized_ranges[range_index]
+        
+        if current_range[0] <= candidate <= current_range[1]:
+            candidates_in_range += 1
+    
+    return candidates_in_range
+
+
 def count_natural_numbers_in_ranges(optimized_ranges):
     total = 0
     for start, end in optimized_ranges:
@@ -86,7 +103,13 @@ def main():
     count = count_candidates_in_ranges(candidates, optimized_ranges)
     count_candidates_time = time.time() - start_time
     
-    print(f"Candidates contained in optimized ranges: {count}")
+    print(f"Candidates contained in optimized ranges (v1): {count}")
+    
+    start_time = time.time()
+    count_v2 = count_candidates_in_ranges_v2(candidates, optimized_ranges)
+    count_candidates_time_v2 = time.time() - start_time
+    
+    print(f"Candidates contained in optimized ranges (v2): {count_v2}")
     print()
     
     start_time = time.time()
@@ -98,9 +121,12 @@ def main():
     print("Execution times:")
     print(f"  Read input: {read_time:.6f}s")
     print(f"  Optimize ranges: {optimize_time:.6f}s")
-    print(f"  Count candidates in ranges: {count_candidates_time:.6f}s")
+    print(f"  Count candidates in ranges (v1): {count_candidates_time:.6f}s")
+    print(f"  Count candidates in ranges (v2): {count_candidates_time_v2:.6f}s")
     print(f"  Count natural numbers: {count_natural_time:.6f}s")
-    print(f"  Total: {read_time + optimize_time + count_candidates_time + count_natural_time:.6f}s")
+    print(f"  Total: {read_time + optimize_time + count_candidates_time + count_candidates_time_v2 + count_natural_time:.6f}s")
+    print(f"  Total (v1): {read_time + optimize_time + count_candidates_time + count_natural_time:.6f}s")
+    print(f"  Total (v2): {read_time + optimize_time + count_candidates_time_v2 + count_natural_time:.6f}s")
 
 
 if __name__ == "__main__":
